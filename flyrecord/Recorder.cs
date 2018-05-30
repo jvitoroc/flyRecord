@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace flyrecord
 {
+
+    
     public sealed class Recorder
     {
 
@@ -46,16 +48,16 @@ namespace flyrecord
 
         private static void tick(object delay)
         {
+            Bitmap bm = new Bitmap(size.Width, size.Height);
+            Graphics gp = Graphics.FromImage(bm);
             int _delay = (int)(delay);
             while (recording) {
-                Bitmap bm = new Bitmap(size.Width, size.Height);
-                Graphics gp = Graphics.FromImage(bm);
                 gp.CopyFromScreen(0, 0, 0, 0, size);
                 video.writeFrame(bm);
-                bm.Dispose();
-                gp.Dispose();
                 Thread.Sleep(_delay);
             }
+            bm.Dispose();
+            gp.Dispose();
         }
 
         public void stop() {
@@ -64,6 +66,8 @@ namespace flyrecord
                 throw new InvalidOperationException();
             }
             recording = false;
+
+            thread.Join();
             //timer.Stop();
             //timer.Enabled = false;
             Dispose();
@@ -85,8 +89,8 @@ namespace flyrecord
             //timer.Start();
             video = Video.Create(videoFileFormat, frameRate, outputPath);
             //timer.Interval = 1000 / frameRate;
-
-            thread.Start(1000 / frameRate);
+            int delay = 1000 / frameRate;
+            thread.Start(delay);
         }
     }
 }

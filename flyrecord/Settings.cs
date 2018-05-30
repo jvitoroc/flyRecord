@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace flyrecord
 {
     [System.Serializable]
-    public sealed class Configuration
+    public sealed class Settings
     {
         private string outputPath = "";
         private bool entireScreen = true;
@@ -15,15 +17,36 @@ namespace flyrecord
         private int delimiterWidth = 0, delimiterHeight = 0;
         private VideoFileFormat videoFileFormat = VideoFileFormat.None;
 
-        private static Configuration instance = null;
+        private static Settings instance = null;
         private static readonly object padlock = new object();
 
-        public Configuration()
+        public Settings()
         {
 
         }
 
-        public static Configuration Instance
+        // Create a local life that stores the current settings.
+        public void Sync()
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fs;
+            if (!File.Exists(Program.SETTINGS_FILE_PATH))
+            {
+                fs = new FileStream(Program.SETTINGS_FILE_PATH, FileMode.Create);
+                formatter.Serialize(fs, Settings.Instance);
+            }
+            else
+            {
+                fs = new FileStream(Program.SETTINGS_FILE_PATH, FileMode.Open);
+                if (fs.Length != 0)
+                    Settings.Instance = (Settings)formatter.Deserialize(fs);
+            }
+            fs.Dispose();
+            fs.Close();
+            formatter = null;
+        }
+
+        public static Settings Instance
         {
             get
             {
@@ -31,7 +54,7 @@ namespace flyrecord
                 {
                     if (instance == null)
                     {
-                        instance = new Configuration();
+                        instance = new Settings();
                         
                     }
                     return instance;
@@ -44,6 +67,7 @@ namespace flyrecord
             }
         }
 
+        // Set the FlyRecorder form settings
         public void Reflect(FlyRecord flyRecord)
         {
             flyRecord.setControlSettings(outputPath, entireScreen, followCursor, delimiterWidth, DelimiterHeight, VideoFileFormat);

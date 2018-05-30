@@ -1,21 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace flyrecord
 {
+
+    public enum FlyRecordStatus
+    {
+        Idle,
+        Moving
+    }
+
     public partial class FlyRecord : Form
     {
         private GlobalKeyboardHook globalKeyboardHook;
+        private FlyRecordStatus FlyRecordStatus = FlyRecordStatus.Idle;
         private Delimiter delimiter;
+        private Point startingMousePositionFormRelative;
 
         public FlyRecord()
         {
@@ -65,7 +69,7 @@ namespace flyrecord
         private void btnRecord_Click(object sender, EventArgs e)
         {
             Size recordSize;
-            if (Configuration.Instance.EntireScreen)
+            if (Settings.Instance.EntireScreen)
                 recordSize = new Size(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             else{
                 if (Application.OpenForms.OfType<Delimiter>().Count() == 0)
@@ -74,7 +78,7 @@ namespace flyrecord
                 delimiter.TopMost = true;
             }
                 
-            Recorder.Instance.start(VideoFileFormat.GIF, 30, "./ola.gif", recordSize);
+            Recorder.Instance.start(VideoFileFormat.GIF, 60, "./ola.gif", recordSize);
             btnStopRecording.Enabled = true;
             btnRecord.Enabled = false;
 
@@ -83,7 +87,7 @@ namespace flyrecord
         private void cboxRecordEntireScreen_CheckedChanged(object sender, EventArgs e)
         {
             enabledDelimiterSettings(!cboxRecordEntireScreen.Checked);
-            Configuration.Instance.EntireScreen = cboxRecordEntireScreen.Checked;
+            Settings.Instance.EntireScreen = cboxRecordEntireScreen.Checked;
             if (!cboxRecordEntireScreen.Checked)
             {
                 delimiter = new Delimiter();
@@ -118,34 +122,34 @@ namespace flyrecord
                 Recorder.Instance.stop();
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream fs = new FileStream(Program.SETTINGS_FILE_PATH, FileMode.Open);
-            formatter.Serialize(fs, Configuration.Instance);
+            formatter.Serialize(fs, Settings.Instance);
             fs.Dispose();
             fs.Close();
         }
 
         private void comboFileFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Configuration.Instance.VideoFileFormat = (VideoFileFormat)comboFileFormat.SelectedIndex;
+            Settings.Instance.VideoFileFormat = (VideoFileFormat)comboFileFormat.SelectedIndex;
         }
 
         private void txtOutputPath_TextChanged(object sender, EventArgs e)
         {
-            Configuration.Instance.OutputPath = txtOutputPath.Text;
+            Settings.Instance.OutputPath = txtOutputPath.Text;
         }
 
         private void cboxFollowCursor_CheckedChanged(object sender, EventArgs e)
         {
-            Configuration.Instance.FollowCursor = cboxFollowCursor.Checked;
+            Settings.Instance.FollowCursor = cboxFollowCursor.Checked;
         }
 
         private void txtDelimiterWidth_TextChanged(object sender, EventArgs e)
         {
-            Configuration.Instance.DelimiterWidth = int.Parse(txtDelimiterWidth.Text);
+            Settings.Instance.DelimiterWidth = int.Parse(txtDelimiterWidth.Text);
         }
 
         private void txtDelimiterHeight_TextChanged(object sender, EventArgs e)
         {
-            Configuration.Instance.DelimiterWidth = int.Parse(txtDelimiterHeight.Text);
+            Settings.Instance.DelimiterWidth = int.Parse(txtDelimiterHeight.Text);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -155,6 +159,47 @@ namespace flyrecord
                 delimiter.TopMost = false;
             btnStopRecording.Enabled = false;
             btnRecord.Enabled = true;
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                FlyRecordStatus = FlyRecordStatus.Moving;
+            }
+            startingMousePositionFormRelative.X = e.X;
+            startingMousePositionFormRelative.Y = e.Y;
+        }
+
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (FlyRecordStatus == FlyRecordStatus.Moving)
+            {
+                int newLocationX = Cursor.Position.X - startingMousePositionFormRelative.X;
+                int newLocationY = Cursor.Position.Y - startingMousePositionFormRelative.Y;
+
+                this.Location = new Point(newLocationX, newLocationY);
+            }
+        }
+
+        private void panel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            FlyRecordStatus = FlyRecordStatus.Idle;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

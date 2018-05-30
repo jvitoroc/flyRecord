@@ -22,26 +22,11 @@ namespace flyrecord
         static void Main()
         {
             Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);    
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fs;
+            Settings.Instance.Sync();
             flyRecord = new FlyRecord();
-            if (!File.Exists(SETTINGS_FILE_PATH))
-            {
-                fs = new FileStream(SETTINGS_FILE_PATH, FileMode.Create);
-                formatter.Serialize(fs, Configuration.Instance);
-            }
-            else
-            {
-                fs = new FileStream(SETTINGS_FILE_PATH, FileMode.Open);
-                if(fs.Length != 0)
-                    Configuration.Instance = (Configuration)formatter.Deserialize(fs);
-            }
-            fs.Dispose();
-            fs.Close();
-            formatter = null;
-            Configuration.Instance.Reflect(flyRecord);
+            Settings.Instance.Reflect(flyRecord);
 
             Application.Run(flyRecord);
         }
