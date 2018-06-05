@@ -14,10 +14,10 @@ namespace flyrecord
 
         public VideoGIF(int frameRate, string outputPath) : base(frameRate, outputPath)
         {
-            gif = AnimatedGif.AnimatedGif.Create(outputPath, 1 / frameRate);
+            gif = AnimatedGif.AnimatedGif.Create(outputPath, 1000 / frameRate);
         }
 
-        public override void writeFrame(Image image)
+        public override void WriteFrame(Image image)
         {
             gif.AddFrame(image);
         }

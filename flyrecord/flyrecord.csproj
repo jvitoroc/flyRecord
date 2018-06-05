@@ -46,6 +46,9 @@
     <Reference Include="AnimatedGif, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AnimatedGif.1.0.1\lib\AnimatedGif.dll</HintPath>
     </Reference>
+    <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.4.6.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\Magick.NET-Q16-AnyCPU.7.4.6\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -65,6 +68,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Countdown.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Countdown.Designer.cs">
+      <DependentUpon>Countdown.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="Delimiter.cs">
       <SubType>Form</SubType>
@@ -72,14 +81,13 @@
     <Compile Include="Delimiter.Designer.cs">
       <DependentUpon>Delimiter.cs</DependentUpon>
     </Compile>
-    <Compile Include="DelimiterSettings.cs" />
     <Compile Include="FlyRecord.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FlyRecord.Designer.cs">
       <DependentUpon>FlyRecord.cs</DependentUpon>
     </Compile>
-    <Compile Include="GlobalHookKeyboard.cs" />
+    <Compile Include="Third\GlobalHookKeyboard.cs" />
     <Compile Include="Video\IVideo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,6 +95,9 @@
     <Compile Include="Video\VideoFile.cs" />
     <Compile Include="Video\VideoGIF.cs" />
     <Compile Include="Recorder.cs" />
+    <EmbeddedResource Include="Countdown.resx">
+      <DependentUpon>Countdown.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Delimiter.resx">
       <DependentUpon>Delimiter.cs</DependentUpon>
     </EmbeddedResource>

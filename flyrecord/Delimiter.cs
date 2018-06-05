@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace flyrecord
@@ -25,21 +19,122 @@ namespace flyrecord
         private Point startingMousePositionFormRelative;
         private Point startingBottomLeftPosition;
 
+        private delegate void ButtonFunctionEventHandler();
+        private ButtonFunctionEventHandler ButtonFunction;
+
+        private static Delimiter instance = null;
+        private static readonly object padlock = new object();
+
+        private bool locked = false;
+
         private Size minimumDelimiterSize = new Size(100, 45);
 
         private Point previousMousePosition;
+
+        public static Delimiter Instance
+        {
+            get
+            {
+                lock (padlock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new Delimiter();
+                    }
+                    return instance;
+                }
+            }
+        }
 
         public Delimiter()
         {
             InitializeComponent();
       
             this.Size = new Size(300, 300);
-            panel1.Location = new Point(5, 35);
-            panel1.Size = new Size(290, 260);
+            pnlInner.Location = new Point(5, 35);
+            pnlInner.Size = new Size(290, 260);
+
+            changeButtonState(Recorder.Instance.Recording);
+            Recorder.OnRecordStart += OnRecordStartEventHandler;
+            Recorder.OnRecordStopComplete += OnRecordStopCompleteEventHandler;
+        }
+
+        public static void Enable()
+        {
+            if(Application.OpenForms["Delimiter"] == null)
+                Delimiter.Instance.Show();
+        }
+
+        public static void Disable()
+        {
+            if (Application.OpenForms["Delimiter"] != null)
+                Delimiter.Instance.Close();
+        }
+
+        private void changeButtonState(bool recording)
+        {
+            if (recording)
+            {
+                btnStartOrRecord.BackColor = Color.DarkRed;
+                btnStartOrRecord.Text = "STOP";
+                ButtonFunction = new ButtonFunctionEventHandler(onStopRecordingButtonHandler);
+            }
+            else
+            {
+                btnStartOrRecord.BackColor = Color.DarkGreen;
+                btnStartOrRecord.Text = "START";
+                ButtonFunction = new ButtonFunctionEventHandler(onStartRecordingButtonHandler);
+            }
+        }
+
+        private void onStartRecordingButtonHandler()
+        {
+            if (Recorder.Instance.Recording)
+                throw new InvalidOperationException();
+            Recorder.Instance.Start();
+        }
+
+        private void onStopRecordingButtonHandler()
+        {
+            if (!Recorder.Instance.Recording)
+                throw new InvalidOperationException();
+            Recorder.Instance.Stop();
+        }
+
+        private void OnRecordStopCompleteEventHandler()
+        {
+            changeButtonState(false);
+        }
+
+        private void OnRecordStartEventHandler()
+        {
+            changeButtonState(true);
+        }
+
+        public void Lock()
+        {
+            locked = true;
+        }
+
+        public void Unlock()
+        {
+            locked = false;
+        }
+
+        public Point getInnerDelimiterUpperLeftLocation()
+        {
+            return new Point(Location.X + 5, Location.Y + 35);
+        }
+
+        public Size getInnerDelimiterSize()
+        {
+            return pnlInner.Size;
         }
 
         private void button1_MouseDown(object sender, MouseEventArgs e)
         {
+            if (locked)
+                return;
             if(e.Button == MouseButtons.Right)
             {
                 DelimiterStatus = DelimiterStatus.Moving;
@@ -55,6 +150,8 @@ namespace flyrecord
 
         private void button1_MouseMove(object sender, MouseEventArgs e)
         {
+            if (locked)
+                return;
             if (DelimiterStatus == DelimiterStatus.Resizing)
             {
                 
@@ -86,6 +183,8 @@ namespace flyrecord
 
         private void topLeftResizer_MouseDown(object sender, MouseEventArgs e)
         {
+            if (locked)
+                return;
             if (e.Button == MouseButtons.Right)
             {
                 DelimiterStatus = DelimiterStatus.Moving;
@@ -103,6 +202,8 @@ namespace flyrecord
 
         private void topLeftResizer_MouseMove(object sender, MouseEventArgs e)
         {
+            if (locked)
+                return;
             if (DelimiterStatus == DelimiterStatus.Resizing)
             {
 
@@ -146,33 +247,10 @@ namespace flyrecord
             DelimiterStatus = DelimiterStatus.Idle;
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void Delimiter_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void topLeftResizer_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void bottomRightResizer_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Delimiter_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void Delimiter_MouseDown(object sender, MouseEventArgs e)
         {
+            if (locked)
+                return;
             if (e.Button == MouseButtons.Left)
             {
                 DelimiterStatus = DelimiterStatus.Moving;
@@ -183,6 +261,8 @@ namespace flyrecord
 
         private void Delimiter_MouseMove(object sender, MouseEventArgs e)
         {
+            if (locked)
+                return;
             if (DelimiterStatus == DelimiterStatus.Moving) {
                 int newLocationX = Cursor.Position.X - startingMousePositionFormRelative.X;
                 int newLocationY = Cursor.Position.Y - startingMousePositionFormRelative.Y;
@@ -193,12 +273,19 @@ namespace flyrecord
 
         private void Delimiter_MouseUp(object sender, MouseEventArgs e)
         {
+            if (locked)
+                return;
             DelimiterStatus = DelimiterStatus.Idle;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Delimiter_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnStartOrRecord_Click(object sender, EventArgs e)
+        {
+            ButtonFunction();
         }
     }
 }

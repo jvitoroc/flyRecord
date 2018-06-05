@@ -25,8 +25,7 @@ namespace flyrecord
             Application.SetCompatibleTextRenderingDefault(false);
 
             Settings.Instance.Sync();
-            flyRecord = new FlyRecord();
-            Settings.Instance.Reflect(flyRecord);
+            flyRecord = new FlyRecord(Settings.Instance);
 
             Application.Run(flyRecord);
         }

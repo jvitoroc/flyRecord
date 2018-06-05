@@ -35,20 +35,20 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.txtOutputPath = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.panelDelimiterSettings = new System.Windows.Forms.Panel();
-            this.cboxFollowCursor = new System.Windows.Forms.CheckBox();
             this.txtDelimiterHeight = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cboxFollowCursor = new System.Windows.Forms.CheckBox();
+            this.txtDelimiterWidth = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.cboxRecordEntireScreen = new System.Windows.Forms.CheckBox();
             this.btnStopRecording = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panelDelimiterSettings.SuspendLayout();
@@ -62,7 +62,7 @@
             this.btnRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRecord.Font = new System.Drawing.Font("Roboto", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRecord.ForeColor = System.Drawing.Color.White;
-            this.btnRecord.Location = new System.Drawing.Point(267, 287);
+            this.btnRecord.Location = new System.Drawing.Point(271, 303);
             this.btnRecord.Name = "btnRecord";
             this.btnRecord.Size = new System.Drawing.Size(70, 25);
             this.btnRecord.TabIndex = 0;
@@ -118,19 +118,33 @@
             this.groupBox1.Controls.Add(this.comboFileFormat);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
-            this.groupBox1.Location = new System.Drawing.Point(12, 45);
+            this.groupBox1.Location = new System.Drawing.Point(16, 61);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(325, 97);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output settings";
             // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Roboto", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Location = new System.Drawing.Point(235, 31);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(73, 20);
+            this.button1.TabIndex = 5;
+            this.button1.Text = "BROWSE";
+            this.button1.UseVisualStyleBackColor = false;
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.panelDelimiterSettings);
             this.groupBox2.Controls.Add(this.cboxRecordEntireScreen);
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(12, 148);
+            this.groupBox2.Location = new System.Drawing.Point(16, 164);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(325, 119);
             this.groupBox2.TabIndex = 7;
@@ -139,15 +153,31 @@
             // 
             // panelDelimiterSettings
             // 
-            this.panelDelimiterSettings.Controls.Add(this.textBox1);
+            this.panelDelimiterSettings.Controls.Add(this.txtDelimiterHeight);
             this.panelDelimiterSettings.Controls.Add(this.label3);
             this.panelDelimiterSettings.Controls.Add(this.cboxFollowCursor);
-            this.panelDelimiterSettings.Controls.Add(this.txtDelimiterHeight);
+            this.panelDelimiterSettings.Controls.Add(this.txtDelimiterWidth);
             this.panelDelimiterSettings.Controls.Add(this.label4);
             this.panelDelimiterSettings.Location = new System.Drawing.Point(9, 52);
             this.panelDelimiterSettings.Name = "panelDelimiterSettings";
             this.panelDelimiterSettings.Size = new System.Drawing.Size(310, 54);
             this.panelDelimiterSettings.TabIndex = 7;
+            // 
+            // txtDelimiterHeight
+            // 
+            this.txtDelimiterHeight.Location = new System.Drawing.Point(79, 28);
+            this.txtDelimiterHeight.Name = "txtDelimiterHeight";
+            this.txtDelimiterHeight.Size = new System.Drawing.Size(64, 20);
+            this.txtDelimiterHeight.TabIndex = 8;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(-3, 31);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(79, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Demiliter height";
             // 
             // cboxFollowCursor
             // 
@@ -160,22 +190,23 @@
             this.cboxFollowCursor.UseVisualStyleBackColor = true;
             this.cboxFollowCursor.CheckedChanged += new System.EventHandler(this.cboxFollowCursor_CheckedChanged);
             // 
-            // txtDelimiterHeight
+            // txtDelimiterWidth
             // 
-            this.txtDelimiterHeight.Location = new System.Drawing.Point(235, 28);
-            this.txtDelimiterHeight.Name = "txtDelimiterHeight";
-            this.txtDelimiterHeight.Size = new System.Drawing.Size(64, 20);
-            this.txtDelimiterHeight.TabIndex = 6;
-            this.txtDelimiterHeight.TextChanged += new System.EventHandler(this.txtDelimiterHeight_TextChanged);
+            this.txtDelimiterWidth.Location = new System.Drawing.Point(235, 28);
+            this.txtDelimiterWidth.Name = "txtDelimiterWidth";
+            this.txtDelimiterWidth.Size = new System.Drawing.Size(64, 20);
+            this.txtDelimiterWidth.TabIndex = 6;
+            this.txtDelimiterWidth.TextChanged += new System.EventHandler(this.txtDelimiterHeight_TextChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(153, 31);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(79, 13);
+            this.label4.Size = new System.Drawing.Size(75, 13);
             this.label4.TabIndex = 5;
-            this.label4.Text = "Demiliter height";
+            this.label4.Text = "Demiliter width";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // cboxRecordEntireScreen
             // 
@@ -198,27 +229,13 @@
             this.btnStopRecording.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStopRecording.Font = new System.Drawing.Font("Roboto", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStopRecording.ForeColor = System.Drawing.Color.White;
-            this.btnStopRecording.Location = new System.Drawing.Point(183, 287);
+            this.btnStopRecording.Location = new System.Drawing.Point(195, 303);
             this.btnStopRecording.Name = "btnStopRecording";
             this.btnStopRecording.Size = new System.Drawing.Size(70, 25);
             this.btnStopRecording.TabIndex = 8;
             this.btnStopRecording.Text = "STOP";
             this.btnStopRecording.UseVisualStyleBackColor = false;
-            this.btnStopRecording.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.DarkSlateGray;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Roboto", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(235, 31);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(73, 20);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "BROWSE";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnStopRecording.Click += new System.EventHandler(this.startButton_Click);
             // 
             // label5
             // 
@@ -239,26 +256,11 @@
             this.panel1.Controls.Add(this.label5);
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(349, 37);
+            this.panel1.Size = new System.Drawing.Size(356, 37);
             this.panel1.TabIndex = 10;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(327, 0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(22, 22);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "X";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -267,7 +269,7 @@
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(305, 0);
+            this.button3.Location = new System.Drawing.Point(312, 0);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(22, 22);
             this.button3.TabIndex = 12;
@@ -275,33 +277,32 @@
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // textBox1
+            // button2
             // 
-            this.textBox1.Location = new System.Drawing.Point(79, 28);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(64, 20);
-            this.textBox1.TabIndex = 8;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(-3, 31);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(79, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Demiliter height";
+            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.Color.White;
+            this.button2.Location = new System.Drawing.Point(334, 0);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(22, 22);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "X";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // FlyRecord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Teal;
-            this.ClientSize = new System.Drawing.Size(349, 321);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.btnStopRecording);
-            this.Controls.Add(this.groupBox2);
+            this.ClientSize = new System.Drawing.Size(356, 340);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnRecord);
+            this.Controls.Add(this.btnStopRecording);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.groupBox2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FlyRecord";
             this.Text = "FlyRecord";
@@ -331,7 +332,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox cboxFollowCursor;
         private System.Windows.Forms.CheckBox cboxRecordEntireScreen;
-        private System.Windows.Forms.TextBox txtDelimiterHeight;
+        private System.Windows.Forms.TextBox txtDelimiterWidth;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel panelDelimiterSettings;
         private System.Windows.Forms.Button btnStopRecording;
@@ -340,7 +341,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtDelimiterHeight;
         private System.Windows.Forms.Label label3;
     }
 }

@@ -20,12 +20,10 @@ namespace flyrecord
         private static Settings instance = null;
         private static readonly object padlock = new object();
 
-        public Settings()
-        {
-
-        }
+        public Settings(){ }
 
         // Create a local life that stores the current settings.
+        // Or save the current settings in that file
         public void Sync()
         {
             BinaryFormatter formatter = new BinaryFormatter();
@@ -65,12 +63,6 @@ namespace flyrecord
             {
                 instance = value;
             }
-        }
-
-        // Set the FlyRecorder form settings
-        public void Reflect(FlyRecord flyRecord)
-        {
-            flyRecord.setControlSettings(outputPath, entireScreen, followCursor, delimiterWidth, DelimiterHeight, VideoFileFormat);
         }
 
         public bool FollowCursor { get => followCursor; set => followCursor = value; }

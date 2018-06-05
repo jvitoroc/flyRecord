@@ -17,8 +17,7 @@ namespace flyrecord
             this.outputPath = outputPath;
         }
 
-        public virtual void writeFrame(Image image) {  }
-
+        public virtual void WriteFrame(Image image) {  }
         public virtual void Finish() { }
 
         public static Video Create(VideoFileFormat videoFileFormat, int frameRate, string outputPath)

@@ -5,21 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace flyrecord
 {
-
-    
     public sealed class Recorder
     {
 
         private static Video video;
-        private static Size size;
-        //private System.Windows.Forms.Timer timer;
+        private static Size blockRegionSize;
+        private static Point upperLeftSource;
+        private readonly static Point upperLeftDestination = new Point(0, 0);
+        private static int delay;
         private static Recorder instance = null;
-        private static bool recording = false;
+        private static bool recording = false; 
         private static readonly object padlock = new object();
-        private static Thread thread = new Thread(tick);
+        private static Thread recordingThread;
+        private static Bitmap bitmapBuffer;
+        private static Graphics graphicsBuffer;
+
+        public delegate void OnRecordStartEventHandler();
+        public delegate void OnRecordStopCompleteEventHandler();
+        public static event OnRecordStartEventHandler OnRecordStart;
+        public static event OnRecordStopCompleteEventHandler OnRecordStopComplete;
 
         public static Recorder Instance
         {
@@ -36,61 +44,82 @@ namespace flyrecord
             }
         }
 
-        public Recorder()
-        {
-            
+        public Recorder(){
+            Countdown.OnTimeout += OnTimeoutEventHandler;
         }
 
-        public bool Recording()
+        public bool Recording
         {
-            return recording;
-        }
-
-        private static void tick(object delay)
-        {
-            Bitmap bm = new Bitmap(size.Width, size.Height);
-            Graphics gp = Graphics.FromImage(bm);
-            int _delay = (int)(delay);
-            while (recording) {
-                gp.CopyFromScreen(0, 0, 0, 0, size);
-                video.writeFrame(bm);
-                Thread.Sleep(_delay);
-            }
-            bm.Dispose();
-            gp.Dispose();
-        }
-
-        public void stop() {
-            if (recording == false)
+            get
             {
-                throw new InvalidOperationException();
+                return recording;
             }
-            recording = false;
-
-            thread.Join();
-            //timer.Stop();
-            //timer.Enabled = false;
-            Dispose();
         }
 
-        public void Dispose()
+        private static void tick()
         {
-            //timer.Dispose();
-            video.Finish();
-            video = null;
+            recording = true;
+            while (recording) {
+                graphicsBuffer.CopyFromScreen(upperLeftSource, upperLeftDestination, blockRegionSize);
+                video.WriteFrame(bitmapBuffer);
+                Thread.Sleep(delay);
+            }
         }
 
-        public void start(VideoFileFormat videoFileFormat, int frameRate, string outputPath, Size _size) {
-            recording = true;
-            size = _size;
-            //timer = new System.Windows.Forms.Timer();
-            //timer.Tick += new EventHandler(tick);
-           // timer.Enabled = true;
-            //timer.Start();
+        public void Stop() {
+            //wait for the recording ends to continue avoiding bugs ;)
+            recording = false;
+            recordingThread.Join();
+
+            video.Finish();
+            Dispose();
+            OnRecordStopComplete?.Invoke();
+        }
+
+        private void Dispose()
+        {
+            video = null;
+            bitmapBuffer.Dispose();
+            graphicsBuffer.Dispose();
+        }
+
+        public void Start(VideoFileFormat videoFileFormat, int frameRate, string outputPath) {
+            Size blockRegionSize;
+
+            //If EntireScreen option is set to true, get the user screen size
+            if (Settings.Instance.EntireScreen)
+                blockRegionSize = new Size(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+            else
+            {
+                Delimiter delimiter = Delimiter.Instance;
+                delimiter.TopMost = true;
+                blockRegionSize = delimiter.getInnerDelimiterSize();
+                upperLeftSource = delimiter.getInnerDelimiterUpperLeftLocation();
+                delimiter.Lock();
+            }
+            Recorder.blockRegionSize = blockRegionSize;
             video = Video.Create(videoFileFormat, frameRate, outputPath);
-            //timer.Interval = 1000 / frameRate;
-            int delay = 1000 / frameRate;
-            thread.Start(delay);
+            delay = 1000 / frameRate;
+
+            //Initialize buffers
+            bitmapBuffer = new Bitmap(blockRegionSize.Width, blockRegionSize.Height);
+            graphicsBuffer = Graphics.FromImage(bitmapBuffer);
+            recordingThread = new Thread(tick);
+
+            //Start countdown, when it is done it will start recording
+            (new Countdown()).Show();
+        }
+
+        public void Start()
+        {
+            Settings instance = Settings.Instance;
+            Start(instance.VideoFileFormat, 30, "./ola.gif");  
+        }
+
+        public void OnTimeoutEventHandler()
+        {
+            recordingThread.Start();
+            OnRecordStart?.Invoke();
         }
     }
 }
