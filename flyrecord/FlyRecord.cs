@@ -199,5 +199,20 @@ namespace flyrecord
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DialogResult res = folderBrowserDialog1.ShowDialog();
+            if(res == DialogResult.OK)
+            {
+                txtOutputPath.Text = folderBrowserDialog1.SelectedPath;
+            }
+
+        }
+
+        private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e)
+        {
+
+        }
     }
 }

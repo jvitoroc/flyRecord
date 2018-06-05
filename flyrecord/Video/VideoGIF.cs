@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using AnimatedGif;
 
 namespace flyrecord
@@ -14,12 +9,12 @@ namespace flyrecord
 
         public VideoGIF(int frameRate, string outputPath) : base(frameRate, outputPath)
         {
-            gif = AnimatedGif.AnimatedGif.Create(outputPath, 1000 / frameRate);
+            gif = AnimatedGif.AnimatedGif.Create(outputPath, 100);
         }
 
         public override void WriteFrame(Image image)
         {
-            gif.AddFrame(image);
+            gif.AddFrame(image, , GifQuality.Bit8);
         }
 
         public override void Finish()
