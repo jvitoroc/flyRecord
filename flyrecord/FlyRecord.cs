@@ -81,7 +81,7 @@ namespace flyrecord
         {
             if (Recorder.Instance.Recording)
                 throw new InvalidOperationException();
-            Recorder.Instance.Start(VideoFileFormat.GIF, 60, "./ola.gif");
+            Recorder.Instance.Start(VideoFileFormat.GIF, 10, "./ola.gif");
         }
 
         private void cboxRecordEntireScreen_CheckedChanged(object sender, EventArgs e)

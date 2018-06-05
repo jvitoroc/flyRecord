@@ -68,7 +68,10 @@ namespace flyrecord
         public static void Disable()
         {
             if (Application.OpenForms["Delimiter"] != null)
+            {
                 Delimiter.Instance.Close();
+                Delimiter.instance = null;
+            }
         }
 
         private void changeButtonState(bool recording)
@@ -104,6 +107,7 @@ namespace flyrecord
         private void OnRecordStopCompleteEventHandler()
         {
             changeButtonState(false);
+            Unlock();
         }
 
         private void OnRecordStartEventHandler()

@@ -31,13 +31,13 @@ namespace flyrecord
             if (!File.Exists(Program.SETTINGS_FILE_PATH))
             {
                 fs = new FileStream(Program.SETTINGS_FILE_PATH, FileMode.Create);
-                formatter.Serialize(fs, Settings.Instance);
+                formatter.Serialize(fs, Instance);
             }
             else
             {
                 fs = new FileStream(Program.SETTINGS_FILE_PATH, FileMode.Open);
                 if (fs.Length != 0)
-                    Settings.Instance = (Settings)formatter.Deserialize(fs);
+                    Instance = (Settings)formatter.Deserialize(fs);
             }
             fs.Dispose();
             fs.Close();

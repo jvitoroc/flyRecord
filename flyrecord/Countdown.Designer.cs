@@ -33,13 +33,17 @@
             // 
             // txtCountdown
             // 
+            this.txtCountdown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtCountdown.AutoSize = true;
             this.txtCountdown.Font = new System.Drawing.Font("Arial", 70F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCountdown.Location = new System.Drawing.Point(76, 73);
             this.txtCountdown.Name = "txtCountdown";
             this.txtCountdown.Size = new System.Drawing.Size(97, 104);
             this.txtCountdown.TabIndex = 0;
-            this.txtCountdown.Text = "3";            // 
+            this.txtCountdown.Text = "3";
+            // 
             // Countdown
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);

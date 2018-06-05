@@ -7,14 +7,14 @@ namespace flyrecord
     {
         private AnimatedGifCreator gif;
 
-        public VideoGIF(int frameRate, string outputPath) : base(frameRate, outputPath)
+        public VideoGIF(int delay, string outputPath) : base(delay, outputPath)
         {
-            gif = AnimatedGif.AnimatedGif.Create(outputPath, 100);
+            gif = new AnimatedGif.AnimatedGifCreator(outputPath, delay);
         }
 
-        public override void WriteFrame(Image image)
+        public override void WriteFrame(Image image, int delay=-1)
         {
-            gif.AddFrame(image, , GifQuality.Bit8);
+            gif.AddFrame(image, delay,GifQuality.Bit8);
         }
 
         public override void Finish()
