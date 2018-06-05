@@ -1,30 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AnimatedGif;
+﻿using System.Drawing;
+using ImageMagick;
 
 namespace flyrecord
 {
     class VideoGIF : Video
     {
-        private AnimatedGifCreator gif;
+        MagickImageCollection collection = new MagickImageCollection();
+        private int currentFrame = 0;
 
-        public VideoGIF(int frameRate, string outputPath) : base(frameRate, outputPath)
+        public VideoGIF(int delay, string outputPath) : base(delay, outputPath)
         {
-            gif = AnimatedGif.AnimatedGif.Create(outputPath, 1000 / frameRate);
         }
 
-        public override void WriteFrame(Image image)
+        public override void WriteFrame(Bitmap image)
         {
-            gif.AddFrame(image);
+            collection.Add(new MagickImage(image));
+            collection[currentFrame].AnimationDelay = 16;
+            currentFrame += 1;
         }
 
         public override void Finish()
         {
-            gif.Dispose();
+            collection.Optimize();
+            collection.Write(outputPath);
         }
     }
 }

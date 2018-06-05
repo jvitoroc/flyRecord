@@ -9,20 +9,21 @@ namespace flyrecord
 {
     public abstract class Video : IVideo
     {
-        private string outputPath;
-        private int frameRate;
+        protected string outputPath;
+        protected int delay;
 
-        public Video(int frameRate, string outputPath) {
-            this.frameRate = frameRate;
+        public Video(int delay, string outputPath) {
             this.outputPath = outputPath;
+            this.delay = delay;
         }
 
         public virtual void WriteFrame(Image image) {  }
+        public virtual void WriteFrame(Bitmap image) { }
         public virtual void Finish() { }
 
-        public static Video Create(VideoFileFormat videoFileFormat, int frameRate, string outputPath)
+        public static Video Create(VideoFileFormat videoFileFormat, int delay, string outputPath)
         {
-                return new VideoGIF(frameRate, outputPath);
+                return new VideoGIF(delay, outputPath);
             throw new ArgumentException();
         }
     }
