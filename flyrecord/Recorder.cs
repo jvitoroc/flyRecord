@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace flyrecord
@@ -68,12 +63,19 @@ namespace flyrecord
         private static void streamWriter()
         {
             stopWatch.Start();
+            Stopwatch internalStopwatch = new Stopwatch();
             while (recording) {
-                graphicsBuffer.CopyFromScreen(upperLeftSource, upperLeftDestination, blockRegionSize);
+                internalStopwatch.Start();
+                bitmapBuffer = new Bitmap(blockRegionSize.Width, blockRegionSize.Height);
+                graphicsBuffer = Graphics.FromImage(bitmapBuffer);
+                graphicsBuffer.CopyFromScreen(upperLeftSource, upperLeftDestination, blockRegionSize, CopyPixelOperation.SourceCopy);
                 frames.Add(bitmapBuffer);
                 totalFrames += 1;
-                Thread.Sleep(delay);
+                internalStopwatch.Stop();
+                internalStopwatch.Reset();
+                Thread.Sleep(delay - (int)internalStopwatch.ElapsedMilliseconds);
             }
+            internalStopwatch = null;
             stopWatch.Stop();
         }
 
@@ -93,12 +95,16 @@ namespace flyrecord
         }
 
         private void Dispose(){
+            for(int i = 0; i < frames.Count; i++)
+            {
+                frames[i].Dispose();
+                frames[i] = null;
+            }
             frames = null;
             bitmapBuffer.Dispose();
             graphicsBuffer.Dispose();
             streamWriterThread = null;
             totalFrames = 0;
-            elapsedMs = 0;
         }
 
         public void Start(VideoFileFormat videoFileFormat, int frameRate, string outputPath) {
@@ -122,8 +128,6 @@ namespace flyrecord
             delay = 1000 / frameRate;
             
             //Initialize buffers
-            bitmapBuffer = new Bitmap(blockRegionSize.Width, blockRegionSize.Height);
-            graphicsBuffer = Graphics.FromImage(bitmapBuffer);
             streamWriterThread = new Thread(streamWriter);
             stopWatch = new Stopwatch();
             frames = new List<Bitmap>();
@@ -135,7 +139,7 @@ namespace flyrecord
         public void Start()
         {
             Settings instance = Settings.Instance;
-            Start(instance.VideoFileFormat, 1, "./ola.gif");  
+            Start(instance.VideoFileFormat, 60, "./ola.gif");  
         }
 
         public void OnTimeoutEventHandler()

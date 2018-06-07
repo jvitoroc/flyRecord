@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
-using AnimatedGif;
+using AnimatedGif; 
 
 namespace flyrecord
 {
@@ -34,7 +34,8 @@ namespace flyrecord
             {
                 for(int i = 0; i < list.Count; i++)
                 {
-                    gifCreator.AddFrame(list[i], -1, GifQuality.Bit8);
+                    gifCreator.AddFrame((Image)list[i]);
+                    
                 }
             }
         }
