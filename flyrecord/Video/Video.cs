@@ -17,12 +17,17 @@ namespace flyrecord
             this.outputPath = outputPath;
         }
 
+        public Video()
+        {
+        }
+
         public virtual void WriteFrame(Image image, int delay = -1) {  }
         public virtual void Finish() { }
+        public virtual void SaveStream(List<Bitmap> list, int delay, string filePath) { }
 
-        public static Video Create(VideoFileFormat videoFileFormat, int frameRate, string outputPath)
+        public static Video Create(VideoFileFormat videoFileFormat)
         {
-                return new VideoGIF(frameRate, outputPath);
+                return new VideoGIF();
             throw new ArgumentException();
         }
     }

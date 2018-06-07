@@ -12,22 +12,8 @@ using System.Windows.Forms;
 namespace flyrecord
 {
 
-    public class Frame
-    {
-        public int delay;
-        public Bitmap frameBuffer;
-        
-        public Frame(Bitmap frame, int delay)
-        {
-            this.delay = delay;
-            this.frameBuffer = frame;
-        }
-    }
-
     public sealed class Recorder
     {
-
-        private static Video video;
         private static Size blockRegionSize;
         private static Point upperLeftSource;
         private readonly static Point upperLeftDestination = new Point(0, 0);
@@ -35,21 +21,22 @@ namespace flyrecord
         private static Recorder instance = null;
         private static bool recording = false; 
         private static readonly object padlock = new object();
+        private static VideoFileFormat videoFileFormat;
 
         private static Thread streamWriterThread;
-        private static Thread streamReaderThread;
 
         private static Bitmap bitmapBuffer;
         private static Graphics graphicsBuffer;
+        private static List<Bitmap> frames;
 
         private static Stopwatch stopWatch;
+
+        private static int totalFrames;
 
         public delegate void OnRecordStartEventHandler();
         public delegate void OnRecordStopCompleteEventHandler();
         public static event OnRecordStartEventHandler OnRecordStart;
         public static event OnRecordStopCompleteEventHandler OnRecordStopComplete;
-
-        private static ConcurrentQueue<Bitmap> queueStream;
 
         public static Recorder Instance
         {
@@ -80,51 +67,43 @@ namespace flyrecord
 
         private static void streamWriter()
         {
+            stopWatch.Start();
             while (recording) {
                 graphicsBuffer.CopyFromScreen(upperLeftSource, upperLeftDestination, blockRegionSize);
-                queueStream.Enqueue(bitmapBuffer);
+                frames.Add(bitmapBuffer);
+                totalFrames += 1;
                 Thread.Sleep(delay);
             }
-        }
-
-        private static void streamReader()
-        {
-            Bitmap localBuffer;
-            while (recording)
-            {
-                if (queueStream.TryDequeue(out localBuffer))
-                {
-                    video.WriteFrame(localBuffer, (int)stopWatch.ElapsedMilliseconds+delay);
-                    stopWatch.Reset();
-                    stopWatch.Start();
-                }
-            }
+            stopWatch.Stop();
         }
 
         public void Stop() {
-     
             recording = false;
             //wait for the recording threads to end
             streamWriterThread.Join();
-            streamReaderThread.Join();
 
-            video.Finish();
+            Video video = Video.Create(videoFileFormat);
+            int realDelay = (int)stopWatch.ElapsedMilliseconds / totalFrames;
+
+            video.SaveStream(frames, realDelay, "./ola.gif");
+            video = null;
+
             Dispose();
             OnRecordStopComplete?.Invoke();
         }
 
-        private void Dispose()
-        {
-            video = null;
-            queueStream = null;
+        private void Dispose(){
+            frames = null;
             bitmapBuffer.Dispose();
             graphicsBuffer.Dispose();
-            streamReaderThread = null;
             streamWriterThread = null;
+            totalFrames = 0;
+            elapsedMs = 0;
         }
 
         public void Start(VideoFileFormat videoFileFormat, int frameRate, string outputPath) {
             Size blockRegionSize;
+            Recorder.videoFileFormat = videoFileFormat;
 
             //If EntireScreen option is set to true, get the user screen size
             if (Settings.Instance.EntireScreen)
@@ -141,16 +120,13 @@ namespace flyrecord
 
             Recorder.blockRegionSize = blockRegionSize;
             delay = 1000 / frameRate;
-            video = Video.Create(videoFileFormat, delay, outputPath);
             
-
             //Initialize buffers
             bitmapBuffer = new Bitmap(blockRegionSize.Width, blockRegionSize.Height);
             graphicsBuffer = Graphics.FromImage(bitmapBuffer);
-            queueStream = new ConcurrentQueue<Bitmap>();
             streamWriterThread = new Thread(streamWriter);
-            streamReaderThread = new Thread(streamReader);
             stopWatch = new Stopwatch();
+            frames = new List<Bitmap>();
 
             //Start countdown, when it is done it will start recording
             (new Countdown()).Show();
@@ -165,8 +141,7 @@ namespace flyrecord
         public void OnTimeoutEventHandler()
         {
             recording = true;
-            streamWriterThread.Start();
-            streamReaderThread.Start();
+            streamWriterThread.Start(); 
             OnRecordStart?.Invoke();
         }
     }
