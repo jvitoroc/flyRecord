@@ -7,6 +7,25 @@ using System.Windows.Forms;
 namespace flyrecord
 {
 
+    public class Frame
+    {
+        public int delay;
+        public Bitmap buffer;
+
+        public Frame(Bitmap buffer, int delay)
+        {
+            this.delay = delay;
+            this.buffer = buffer;
+        }
+
+        public void Dispose()
+        {
+            buffer.Dispose();
+            buffer = null;
+            delay = 0;
+        }
+    }
+
     public sealed class Recorder
     {
         private static Size blockRegionSize;
@@ -22,7 +41,7 @@ namespace flyrecord
 
         private static Bitmap bitmapBuffer;
         private static Graphics graphicsBuffer;
-        private static List<Bitmap> frames;
+        private static List<Frame> frames;
 
         private static Stopwatch stopWatch;
 
@@ -62,21 +81,18 @@ namespace flyrecord
 
         private static void streamWriter()
         {
-            stopWatch.Start();
-            Stopwatch internalStopwatch = new Stopwatch();
             while (recording) {
-                internalStopwatch.Start();
+                stopWatch.Start();
                 bitmapBuffer = new Bitmap(blockRegionSize.Width, blockRegionSize.Height);
                 graphicsBuffer = Graphics.FromImage(bitmapBuffer);
                 graphicsBuffer.CopyFromScreen(upperLeftSource, upperLeftDestination, blockRegionSize, CopyPixelOperation.SourceCopy);
-                frames.Add(bitmapBuffer);
+                
                 totalFrames += 1;
-                internalStopwatch.Stop();
-                internalStopwatch.Reset();
-                Thread.Sleep(delay - (int)internalStopwatch.ElapsedMilliseconds);
+                stopWatch.Stop();
+                frames.Add(new Frame(bitmapBuffer, (int)stopWatch.ElapsedMilliseconds));
+                stopWatch.Reset();
+                Thread.Sleep(delay);
             }
-            internalStopwatch = null;
-            stopWatch.Stop();
         }
 
         public void Stop() {
@@ -85,9 +101,8 @@ namespace flyrecord
             streamWriterThread.Join();
 
             Video video = Video.Create(videoFileFormat);
-            int realDelay = (int)stopWatch.ElapsedMilliseconds / totalFrames;
 
-            video.SaveStream(frames, realDelay, "./ola.gif");
+            video.SaveStream(frames, "./ola.gif");
             video = null;
 
             Dispose();
@@ -102,6 +117,7 @@ namespace flyrecord
             }
             frames = null;
             bitmapBuffer.Dispose();
+            stopWatch = null;
             graphicsBuffer.Dispose();
             streamWriterThread = null;
             totalFrames = 0;
@@ -130,7 +146,7 @@ namespace flyrecord
             //Initialize buffers
             streamWriterThread = new Thread(streamWriter);
             stopWatch = new Stopwatch();
-            frames = new List<Bitmap>();
+            frames = new List<Frame>();
 
             //Start countdown, when it is done it will start recording
             (new Countdown()).Show();
