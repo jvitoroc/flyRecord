@@ -81,18 +81,20 @@ namespace flyrecord
 
         private static void streamWriter()
         {
+            stopWatch.Start();
+            Stopwatch internalStopwatch = new Stopwatch();
             while (recording) {
-                stopWatch.Start();
+                internalStopwatch.Start();
                 bitmapBuffer = new Bitmap(blockRegionSize.Width, blockRegionSize.Height);
                 graphicsBuffer = Graphics.FromImage(bitmapBuffer);
                 graphicsBuffer.CopyFromScreen(upperLeftSource, upperLeftDestination, blockRegionSize, CopyPixelOperation.SourceCopy);
-                
                 totalFrames += 1;
-                stopWatch.Stop();
-                frames.Add(new Frame(bitmapBuffer, (int)stopWatch.ElapsedMilliseconds));
-                stopWatch.Reset();
+                internalStopwatch.Stop();
+                frames.Add(new Frame(bitmapBuffer, (int)internalStopwatch.ElapsedMilliseconds));
+                internalStopwatch.Reset();
                 Thread.Sleep(delay);
             }
+            stopWatch.Stop();
         }
 
         public void Stop() {
@@ -101,8 +103,8 @@ namespace flyrecord
             streamWriterThread.Join();
 
             Video video = Video.Create(videoFileFormat);
-
-            video.SaveStream(frames, "./ola.gif");
+            int realDelay = (int)stopWatch.ElapsedMilliseconds / totalFrames;
+            video.SaveStream(frames, realDelay, "./ola.gif");
             video = null;
 
             Dispose();

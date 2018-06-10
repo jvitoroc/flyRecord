@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.btnRecord = new System.Windows.Forms.Button();
-            this.comboFileFormat = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtOutputPath = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -49,6 +47,8 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboFileFormat = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panelDelimiterSettings.SuspendLayout();
@@ -69,27 +69,6 @@
             this.btnRecord.Text = "RECORD";
             this.btnRecord.UseVisualStyleBackColor = false;
             this.btnRecord.Click += new System.EventHandler(this.btnRecord_Click);
-            // 
-            // comboFileFormat
-            // 
-            this.comboFileFormat.FormattingEnabled = true;
-            this.comboFileFormat.Items.AddRange(new object[] {
-            "GIF"});
-            this.comboFileFormat.Location = new System.Drawing.Point(67, 57);
-            this.comboFileFormat.Name = "comboFileFormat";
-            this.comboFileFormat.Size = new System.Drawing.Size(121, 21);
-            this.comboFileFormat.TabIndex = 1;
-            this.comboFileFormat.SelectedIndexChanged += new System.EventHandler(this.comboFileFormat_SelectedIndexChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(6, 60);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "File format";
             // 
             // label2
             // 
@@ -124,6 +103,7 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output settings";
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // button1
             // 
@@ -297,6 +277,27 @@
             // 
             this.folderBrowserDialog1.HelpRequest += new System.EventHandler(this.folderBrowserDialog1_HelpRequest);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(6, 60);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "File format";
+            // 
+            // comboFileFormat
+            // 
+            this.comboFileFormat.FormattingEnabled = true;
+            this.comboFileFormat.Items.AddRange(new object[] {
+            "GIF"});
+            this.comboFileFormat.Location = new System.Drawing.Point(67, 57);
+            this.comboFileFormat.Name = "comboFileFormat";
+            this.comboFileFormat.Size = new System.Drawing.Size(121, 21);
+            this.comboFileFormat.TabIndex = 1;
+            this.comboFileFormat.SelectedIndexChanged += new System.EventHandler(this.comboFileFormat_SelectedIndexChanged);
+            // 
             // FlyRecord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -328,8 +329,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnRecord;
-        private System.Windows.Forms.ComboBox comboFileFormat;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtOutputPath;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -348,6 +347,8 @@
         private System.Windows.Forms.TextBox txtDelimiterHeight;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.ComboBox comboFileFormat;
+        private System.Windows.Forms.Label label1;
     }
 }
 

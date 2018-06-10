@@ -28,14 +28,15 @@ namespace flyrecord
             gif.AddFrame(image, delay,GifQuality.Bit8);
         }
 
-        public override void SaveStream(List<Frame> frames, string filePath)
+        public override void SaveStream(List<Frame> frames, int delay, string filePath)
         {
-            using(var gifCreator = new AnimatedGif.AnimatedGifCreator(filePath, 0))
+            using(var gifCreator = new AnimatedGif.AnimatedGifCreator(filePath, delay))
             {
                 for(int i = 0; i < frames.Count; i++)
                 {
-                    gifCreator.AddFrame((Image)frames[i].buffer, frames[i].delay);
-                    
+                    Frame currFrame = frames[i];
+                    gifCreator.AddFrame((Image)currFrame.buffer, currFrame.delay > delay ? currFrame.delay:delay);
+
                 }
             }
         }

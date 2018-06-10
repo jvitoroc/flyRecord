@@ -23,7 +23,7 @@ namespace flyrecord
 
         public virtual void WriteFrame(Image image, int delay = -1) {  }
         public virtual void Finish() { }
-        public virtual void SaveStream(List<Frame> list, string filePath) { }
+        public virtual void SaveStream(List<Frame> list, int delay, string filePath) { }
 
         public static Video Create(VideoFileFormat videoFileFormat)
         {
