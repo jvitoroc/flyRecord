@@ -54,9 +54,11 @@ namespace flyrecord
             pnlInner.Location = new Point(5, 35);
             pnlInner.Size = new Size(290, 260);
 
-            changeButtonState(Recorder.Instance.Recording);
+            changeButtonState(Recorder.Instance.Status);
+
             Recorder.OnRecordStart += OnRecordStartEventHandler;
             Recorder.OnRecordStopComplete += OnRecordStopCompleteEventHandler;
+            Recorder.OnPreparing += OnPreparingEventHandler;
         }
 
         public static void Enable()
@@ -74,46 +76,53 @@ namespace flyrecord
             }
         }
 
-        private void changeButtonState(bool recording)
+        private void changeButtonState(RecorderStatus recorderStatus)
         {
-            if (recording)
+            switch (recorderStatus)
             {
-                btnStartOrRecord.BackColor = Color.DarkRed;
-                btnStartOrRecord.Text = "STOP";
-                ButtonFunction = new ButtonFunctionEventHandler(onStopRecordingButtonHandler);
-            }
-            else
-            {
-                btnStartOrRecord.BackColor = Color.DarkGreen;
-                btnStartOrRecord.Text = "START";
-                ButtonFunction = new ButtonFunctionEventHandler(onStartRecordingButtonHandler);
+                case RecorderStatus.Recording:
+                    btnStartOrRecord.BackColor = Color.DarkRed;
+                    btnStartOrRecord.Text = "STOP";
+                    ButtonFunction = new ButtonFunctionEventHandler(onStopRecordingButtonHandler);
+                    break;
+                default:
+                    btnStartOrRecord.BackColor = Color.DarkGreen;
+                    btnStartOrRecord.Text = "START";
+                    ButtonFunction = new ButtonFunctionEventHandler(onStartRecordingButtonHandler);
+                    break;
             }
         }
 
         private void onStartRecordingButtonHandler()
         {
-            if (Recorder.Instance.Recording)
+            if (Recorder.Instance.Status == RecorderStatus.Recording)
                 throw new InvalidOperationException();
             Recorder.Instance.Start();
         }
 
         private void onStopRecordingButtonHandler()
         {
-            if (!Recorder.Instance.Recording)
+            if (Recorder.Instance.Status == RecorderStatus.Stopped)
                 throw new InvalidOperationException();
             Recorder.Instance.Stop();
         }
 
         private void OnRecordStopCompleteEventHandler()
         {
-            changeButtonState(false);
+            changeButtonState(RecorderStatus.Stopped);
             Unlock();
         }
 
         private void OnRecordStartEventHandler()
         {
-            changeButtonState(true);
+            //
         }
+
+        private void OnPreparingEventHandler()
+        {
+            changeButtonState(RecorderStatus.Recording);
+        }
+
 
         public void Lock()
         {
@@ -163,9 +172,9 @@ namespace flyrecord
                 int height = (Cursor.Position.Y - DesktopLocation.Y) + startingMousePositionFormRelative.Y;
 
                 Size newSize = new Size(width, height);
-                if (newSize.Width <= minimumDelimiterSize.Width)
+                if (newSize.Width < minimumDelimiterSize.Width)
                     newSize.Width = minimumDelimiterSize.Width;
-                if(newSize.Height <= minimumDelimiterSize.Height)
+                if(newSize.Height < minimumDelimiterSize.Height)
                     newSize.Height = minimumDelimiterSize.Height;
                 this.Size = newSize;
 
@@ -175,9 +184,7 @@ namespace flyrecord
                 int newLocationY = Cursor.Position.Y - this.Size.Height + startingMousePositionFormRelative.Y;
 
                 this.Location = new Point(newLocationX, newLocationY);
-
             }
-            
         }
 
         private void button1_MouseUp(object sender, MouseEventArgs e)
@@ -220,12 +227,12 @@ namespace flyrecord
                 Size newSize = new Size(newSizeWidth, newSizeHeight);
                 Point newLocation = new Point(newLocationX, newLocationY);
 
-                if (newSize.Width <= minimumDelimiterSize.Width)
+                if (newSize.Width < minimumDelimiterSize.Width)
                 {
                     newSize.Width = minimumDelimiterSize.Width;
                     newLocation.X = previousMousePosition.X;
                 }
-                if (newSize.Height <= minimumDelimiterSize.Height) {
+                if (newSize.Height < minimumDelimiterSize.Height) {
                     newSize.Height = minimumDelimiterSize.Height;
                     newLocation.Y = previousMousePosition.Y;
                 }

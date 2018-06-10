@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -26,8 +27,18 @@ namespace flyrecord
         }
     }
 
+    public enum RecorderStatus
+    {
+        Stopped,
+        Preparing,
+        Recording
+    }
+
     public sealed class Recorder
     {
+
+        private SaveFileDialog saveFileDialog;
+
         private static Size blockRegionSize;
         private static Point upperLeftSource;
         private readonly static Point upperLeftDestination = new Point(0, 0);
@@ -35,13 +46,15 @@ namespace flyrecord
         private static Recorder instance = null;
         private static bool recording = false; 
         private static readonly object padlock = new object();
-        private static VideoFileFormat videoFileFormat;
+
+        private RecorderStatus RecorderStatus = RecorderStatus.Stopped;
 
         private static Thread streamWriterThread;
 
         private static Bitmap bitmapBuffer;
         private static Graphics graphicsBuffer;
         private static List<Frame> frames;
+        private Countdown countdown = null; 
 
         private static Stopwatch stopWatch;
 
@@ -49,8 +62,10 @@ namespace flyrecord
 
         public delegate void OnRecordStartEventHandler();
         public delegate void OnRecordStopCompleteEventHandler();
+        public delegate void OnPreparingEventHandler();
         public static event OnRecordStartEventHandler OnRecordStart;
         public static event OnRecordStopCompleteEventHandler OnRecordStopComplete;
+        public static event OnPreparingEventHandler OnPreparing;
 
         public static Recorder Instance
         {
@@ -71,14 +86,15 @@ namespace flyrecord
             Countdown.OnTimeout += OnTimeoutEventHandler;
         }
 
-        public bool Recording
+        public RecorderStatus Status
         {
             get
             {
-                return recording;
+                return RecorderStatus;
             }
         }
 
+        //Capture user screen and write it to the buffer
         private static void streamWriter()
         {
             stopWatch.Start();
@@ -98,17 +114,39 @@ namespace flyrecord
         }
 
         public void Stop() {
+            if (RecorderStatus == RecorderStatus.Preparing)
+            {
+                if (countdown != null)
+                {
+                    countdown.Stop();
+                    countdown.Close();
+                    countdown = null;
+                }
+                Dispose();
+                OnRecordStopComplete?.Invoke();
+                return;
+            }
+            RecorderStatus = RecorderStatus.Stopped;
             recording = false;
-            //wait for the recording threads to end
+
+            //Wait for the recording thread to end
             streamWriterThread.Join();
 
-            Video video = Video.Create(videoFileFormat);
-            int realDelay = (int)stopWatch.ElapsedMilliseconds / totalFrames;
-            video.SaveStream(frames, realDelay, "./ola.gif");
-            video = null;
+            int meanDelay = (int)stopWatch.ElapsedMilliseconds / totalFrames;
+
+            saveFileDialog = new SaveFileDialog();
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.InitialDirectory = Path.GetFullPath(Settings.Instance.OutputPath);
+            saveFileDialog.ShowDialog();
+
+            GIF gif = new GIF(meanDelay, Path.Combine(Settings.Instance.OutputPath, saveFileDialog.FileName));
+            gif.Save(frames);
+            gif = null;
 
             Dispose();
+
             OnRecordStopComplete?.Invoke();
+
         }
 
         private void Dispose(){
@@ -118,16 +156,19 @@ namespace flyrecord
                 frames[i] = null;
             }
             frames = null;
-            bitmapBuffer.Dispose();
+            if (bitmapBuffer != null)
+                bitmapBuffer.Dispose();
             stopWatch = null;
-            graphicsBuffer.Dispose();
+            if (graphicsBuffer != null)
+                graphicsBuffer.Dispose();
             streamWriterThread = null;
             totalFrames = 0;
         }
 
-        public void Start(VideoFileFormat videoFileFormat, int frameRate, string outputPath) {
+        public void Start(float frameRate) {
+            RecorderStatus = RecorderStatus.Preparing;
+            OnPreparing?.Invoke();
             Size blockRegionSize;
-            Recorder.videoFileFormat = videoFileFormat;
 
             //If EntireScreen option is set to true, get the user screen size
             if (Settings.Instance.EntireScreen)
@@ -143,7 +184,7 @@ namespace flyrecord
             }
 
             Recorder.blockRegionSize = blockRegionSize;
-            delay = 1000 / frameRate;
+            delay = (int)(1000.0 / frameRate);
             
             //Initialize buffers
             streamWriterThread = new Thread(streamWriter);
@@ -151,19 +192,19 @@ namespace flyrecord
             frames = new List<Frame>();
 
             //Start countdown, when it is done it will start recording
-            (new Countdown()).Show();
+            (countdown = new Countdown()).Show();
         }
 
         public void Start()
         {
-            Settings instance = Settings.Instance;
-            Start(instance.VideoFileFormat, 60, "./ola.gif");  
+            Start(60);  
         }
 
         public void OnTimeoutEventHandler()
         {
             recording = true;
-            streamWriterThread.Start(); 
+            streamWriterThread.Start();
+            RecorderStatus = RecorderStatus.Recording;
             OnRecordStart?.Invoke();
         }
     }

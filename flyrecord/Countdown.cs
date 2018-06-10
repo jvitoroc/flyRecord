@@ -32,6 +32,12 @@ namespace flyrecord
             timer.Start();
         }
 
+        public void Stop()
+        {
+            timer.Stop();
+            timer.Dispose();
+        }
+
         private void tickCountdownHandler(object sender, System.EventArgs e)
         {
             tickCountdown();

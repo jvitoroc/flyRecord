@@ -34,6 +34,8 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cboxFPS = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelDelimiterSettings = new System.Windows.Forms.Panel();
             this.txtDelimiterHeight = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -47,8 +49,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboFileFormat = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panelDelimiterSettings.SuspendLayout();
@@ -62,7 +62,7 @@
             this.btnRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRecord.Font = new System.Drawing.Font("Roboto", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRecord.ForeColor = System.Drawing.Color.White;
-            this.btnRecord.Location = new System.Drawing.Point(271, 303);
+            this.btnRecord.Location = new System.Drawing.Point(271, 315);
             this.btnRecord.Name = "btnRecord";
             this.btnRecord.Size = new System.Drawing.Size(70, 25);
             this.btnRecord.TabIndex = 0;
@@ -83,9 +83,9 @@
             // txtOutputPath
             // 
             this.txtOutputPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtOutputPath.Location = new System.Drawing.Point(67, 31);
+            this.txtOutputPath.Location = new System.Drawing.Point(41, 31);
             this.txtOutputPath.Name = "txtOutputPath";
-            this.txtOutputPath.Size = new System.Drawing.Size(162, 20);
+            this.txtOutputPath.Size = new System.Drawing.Size(188, 20);
             this.txtOutputPath.TabIndex = 4;
             this.txtOutputPath.TextChanged += new System.EventHandler(this.txtOutputPath_TextChanged);
             // 
@@ -94,16 +94,13 @@
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.txtOutputPath);
-            this.groupBox1.Controls.Add(this.comboFileFormat);
-            this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.ForeColor = System.Drawing.Color.White;
             this.groupBox1.Location = new System.Drawing.Point(16, 61);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(325, 97);
+            this.groupBox1.Size = new System.Drawing.Size(325, 71);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output settings";
-            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // button1
             // 
@@ -122,15 +119,46 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cboxFPS);
+            this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.panelDelimiterSettings);
             this.groupBox2.Controls.Add(this.cboxRecordEntireScreen);
             this.groupBox2.ForeColor = System.Drawing.Color.White;
-            this.groupBox2.Location = new System.Drawing.Point(16, 164);
+            this.groupBox2.Location = new System.Drawing.Point(16, 150);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(325, 119);
+            this.groupBox2.Size = new System.Drawing.Size(325, 150);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Recording settings";
+            // 
+            // cboxFPS
+            // 
+            this.cboxFPS.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboxFPS.FormattingEnabled = true;
+            this.cboxFPS.Items.AddRange(new object[] {
+            "15",
+            "24",
+            "23.976",
+            "25",
+            "30",
+            "50",
+            "59.94",
+            "60"});
+            this.cboxFPS.Location = new System.Drawing.Point(69, 28);
+            this.cboxFPS.Name = "cboxFPS";
+            this.cboxFPS.Size = new System.Drawing.Size(121, 21);
+            this.cboxFPS.TabIndex = 8;
+            this.cboxFPS.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(6, 31);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(57, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Frame rate";
             // 
             // panelDelimiterSettings
             // 
@@ -139,7 +167,7 @@
             this.panelDelimiterSettings.Controls.Add(this.cboxFollowCursor);
             this.panelDelimiterSettings.Controls.Add(this.txtDelimiterWidth);
             this.panelDelimiterSettings.Controls.Add(this.label4);
-            this.panelDelimiterSettings.Location = new System.Drawing.Point(9, 52);
+            this.panelDelimiterSettings.Location = new System.Drawing.Point(6, 90);
             this.panelDelimiterSettings.Name = "panelDelimiterSettings";
             this.panelDelimiterSettings.Size = new System.Drawing.Size(310, 54);
             this.panelDelimiterSettings.TabIndex = 7;
@@ -150,6 +178,7 @@
             this.txtDelimiterHeight.Name = "txtDelimiterHeight";
             this.txtDelimiterHeight.Size = new System.Drawing.Size(64, 20);
             this.txtDelimiterHeight.TabIndex = 8;
+            this.txtDelimiterHeight.TextChanged += new System.EventHandler(this.txtDelimiterHeight_TextChanged_1);
             // 
             // label3
             // 
@@ -177,7 +206,7 @@
             this.txtDelimiterWidth.Name = "txtDelimiterWidth";
             this.txtDelimiterWidth.Size = new System.Drawing.Size(64, 20);
             this.txtDelimiterWidth.TabIndex = 6;
-            this.txtDelimiterWidth.TextChanged += new System.EventHandler(this.txtDelimiterHeight_TextChanged);
+            this.txtDelimiterWidth.TextChanged += new System.EventHandler(this.txtDelimiterWidth_TextChanged);
             // 
             // label4
             // 
@@ -187,14 +216,13 @@
             this.label4.Size = new System.Drawing.Size(75, 13);
             this.label4.TabIndex = 5;
             this.label4.Text = "Demiliter width";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // cboxRecordEntireScreen
             // 
             this.cboxRecordEntireScreen.AutoSize = true;
             this.cboxRecordEntireScreen.Checked = true;
             this.cboxRecordEntireScreen.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cboxRecordEntireScreen.Location = new System.Drawing.Point(9, 29);
+            this.cboxRecordEntireScreen.Location = new System.Drawing.Point(6, 66);
             this.cboxRecordEntireScreen.Name = "cboxRecordEntireScreen";
             this.cboxRecordEntireScreen.Size = new System.Drawing.Size(143, 17);
             this.cboxRecordEntireScreen.TabIndex = 0;
@@ -210,7 +238,7 @@
             this.btnStopRecording.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStopRecording.Font = new System.Drawing.Font("Roboto", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStopRecording.ForeColor = System.Drawing.Color.White;
-            this.btnStopRecording.Location = new System.Drawing.Point(195, 303);
+            this.btnStopRecording.Location = new System.Drawing.Point(195, 315);
             this.btnStopRecording.Name = "btnStopRecording";
             this.btnStopRecording.Size = new System.Drawing.Size(70, 25);
             this.btnStopRecording.TabIndex = 8;
@@ -273,37 +301,12 @@
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // folderBrowserDialog1
-            // 
-            this.folderBrowserDialog1.HelpRequest += new System.EventHandler(this.folderBrowserDialog1_HelpRequest);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(6, 60);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "File format";
-            // 
-            // comboFileFormat
-            // 
-            this.comboFileFormat.FormattingEnabled = true;
-            this.comboFileFormat.Items.AddRange(new object[] {
-            "GIF"});
-            this.comboFileFormat.Location = new System.Drawing.Point(67, 57);
-            this.comboFileFormat.Name = "comboFileFormat";
-            this.comboFileFormat.Size = new System.Drawing.Size(121, 21);
-            this.comboFileFormat.TabIndex = 1;
-            this.comboFileFormat.SelectedIndexChanged += new System.EventHandler(this.comboFileFormat_SelectedIndexChanged);
-            // 
             // FlyRecord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Teal;
-            this.ClientSize = new System.Drawing.Size(356, 340);
+            this.ClientSize = new System.Drawing.Size(356, 352);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnRecord);
             this.Controls.Add(this.btnStopRecording);
@@ -347,8 +350,8 @@
         private System.Windows.Forms.TextBox txtDelimiterHeight;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.ComboBox comboFileFormat;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cboxFPS;
     }
 }
 

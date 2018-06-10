@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 
 namespace flyrecord
@@ -25,16 +22,17 @@ namespace flyrecord
 
             if(settings != null)
             {
-                comboFileFormat.SelectedIndex = (int)settings.VideoFileFormat;
                 txtOutputPath.Text = settings.OutputPath;
                 txtDelimiterHeight.Text = settings.DelimiterHeight.ToString();
                 txtDelimiterWidth.Text = settings.DelimiterWidth.ToString();
                 cboxFollowCursor.Checked = settings.FollowCursor;
                 cboxRecordEntireScreen.Checked = settings.EntireScreen;
                 enabledDelimiter(!settings.EntireScreen);
+                cboxFPS.SelectedIndex = settings.FrameRateIndex;
             }
             Recorder.OnRecordStart += OnRecordStartEventHandler;
             Recorder.OnRecordStopComplete += OnRecordStopCompleteEventHandler;
+            Recorder.OnPreparing += OnPreparingEventHandler;
         }
 
         private void OnRecordStopCompleteEventHandler()
@@ -43,10 +41,14 @@ namespace flyrecord
             btnStopRecording.Enabled = false;
         }
 
-        private void OnRecordStartEventHandler()
+        private void OnPreparingEventHandler()
         {
             btnRecord.Enabled = false;
             btnStopRecording.Enabled = true;
+        }
+
+        private void OnRecordStartEventHandler()
+        {
             WindowState = FormWindowState.Minimized;
         }
 
@@ -79,9 +81,9 @@ namespace flyrecord
 
         private void btnRecord_Click(object sender, EventArgs e)
         {
-            if (Recorder.Instance.Recording)
+            if (Recorder.Instance.Status == RecorderStatus.Recording)
                 throw new InvalidOperationException();
-            Recorder.Instance.Start(VideoFileFormat.GIF, 60, "./ola.gif");
+            Recorder.Instance.Start(Settings.Instance.FrameRate);
         }
 
         private void cboxRecordEntireScreen_CheckedChanged(object sender, EventArgs e)
@@ -107,14 +109,9 @@ namespace flyrecord
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             globalKeyboardHook?.Dispose();
-            if (Recorder.Instance.Recording)
+            if (Recorder.Instance.Status == RecorderStatus.Recording)
                 Recorder.Instance.Stop();
-            Settings.Instance.Sync();
-        }
-
-        private void comboFileFormat_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Settings.Instance.VideoFileFormat = (VideoFileFormat)comboFileFormat.SelectedIndex;
+            Settings.Instance.Sync(true);
         }
 
         private void txtOutputPath_TextChanged(object sender, EventArgs e)
@@ -127,19 +124,9 @@ namespace flyrecord
             Settings.Instance.FollowCursor = cboxFollowCursor.Checked;
         }
 
-        private void txtDelimiterWidth_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Instance.DelimiterWidth = int.Parse(txtDelimiterWidth.Text);
-        }
-
-        private void txtDelimiterHeight_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Instance.DelimiterWidth = int.Parse(txtDelimiterWidth.Text);
-        }
-
         private void startButton_Click(object sender, EventArgs e)
         {
-            if (!Recorder.Instance.Recording)
+            if (Recorder.Instance.Status == RecorderStatus.Recording)
                 throw new InvalidOperationException();
             Recorder.Instance.Stop();
         }
@@ -180,42 +167,28 @@ namespace flyrecord
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tabPage1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tabPage3_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             DialogResult res = folderBrowserDialog1.ShowDialog();
-            if(res == DialogResult.OK)
+            if (res == DialogResult.OK)
             {
                 txtOutputPath.Text = folderBrowserDialog1.SelectedPath;
+                Settings.Instance.OutputPath = folderBrowserDialog1.SelectedPath;
             }
-
         }
 
-        private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            Settings.Instance.FrameRate = float.Parse(cboxFPS.Text);
+            Settings.Instance.FrameRateIndex = cboxFPS.SelectedIndex;
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
+        private void txtDelimiterHeight_TextChanged_1(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void txtDelimiterWidth_TextChanged(object sender, EventArgs e)
         {
 
         }
