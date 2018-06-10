@@ -9,7 +9,6 @@ namespace flyrecord
         private string outputPath = "";
         private bool entireScreen = true;
         private bool followCursor = false;
-        private int delimiterWidth = 0, delimiterHeight = 0;
         private float frameRate = 15;
         private int frameRateIndex = 0;
 
@@ -74,8 +73,6 @@ namespace flyrecord
         public bool FollowCursor { get => followCursor; set => followCursor = value; }
         public bool EntireScreen { get => entireScreen; set => entireScreen = value; }
         public string OutputPath { get => outputPath; set => outputPath = value; }
-        public int DelimiterWidth { get => delimiterWidth; set => delimiterWidth = value; }
-        public int DelimiterHeight { get => delimiterHeight; set => delimiterHeight = value; }
         public float FrameRate { get => frameRate; set => frameRate = value; }
         public int FrameRateIndex { get => frameRateIndex; set => frameRateIndex = value; }
     }

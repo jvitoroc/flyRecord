@@ -16,7 +16,7 @@ namespace flyrecord
         /// 
 
         public const string SETTINGS_FILE_PATH = "settings.dat";
-        public static FlyRecord flyRecord;
+        public static FramePick flyRecord;
 
         [STAThread]
         static void Main()
@@ -25,7 +25,7 @@ namespace flyrecord
             Application.SetCompatibleTextRenderingDefault(false);
 
             Settings.Instance.Sync();
-            flyRecord = new FlyRecord(Settings.Instance);
+            flyRecord = new FramePick(Settings.Instance);
 
             Application.Run(flyRecord);
         }

@@ -44,6 +44,7 @@
             this.pnlInner.Name = "pnlInner";
             this.pnlInner.Size = new System.Drawing.Size(290, 260);
             this.pnlInner.TabIndex = 0;
+            this.pnlInner.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlInner_Paint);
             // 
             // topLeftResizer
             // 
@@ -51,8 +52,8 @@
             this.topLeftResizer.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
             this.topLeftResizer.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.topLeftResizer.FlatAppearance.BorderSize = 0;
-            this.topLeftResizer.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Black;
-            this.topLeftResizer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Black;
+            this.topLeftResizer.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateGray;
+            this.topLeftResizer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateGray;
             this.topLeftResizer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.topLeftResizer.Location = new System.Drawing.Point(0, 0);
             this.topLeftResizer.Name = "topLeftResizer";
@@ -70,17 +71,17 @@
             this.bottomRightResizer.Cursor = System.Windows.Forms.Cursors.SizeNWSE;
             this.bottomRightResizer.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.bottomRightResizer.FlatAppearance.BorderSize = 0;
-            this.bottomRightResizer.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Black;
-            this.bottomRightResizer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Black;
+            this.bottomRightResizer.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkSlateGray;
+            this.bottomRightResizer.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DarkSlateGray;
             this.bottomRightResizer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bottomRightResizer.Location = new System.Drawing.Point(295, 295);
             this.bottomRightResizer.Name = "bottomRightResizer";
             this.bottomRightResizer.Size = new System.Drawing.Size(5, 5);
             this.bottomRightResizer.TabIndex = 1;
             this.bottomRightResizer.UseVisualStyleBackColor = false;
-            this.bottomRightResizer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button1_MouseDown);
-            this.bottomRightResizer.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button1_MouseMove);
-            this.bottomRightResizer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button1_MouseUp);
+            this.bottomRightResizer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bottomRightResizer_MouseDown);
+            this.bottomRightResizer.MouseMove += new System.Windows.Forms.MouseEventHandler(this.bottomRightResizer_MouseMove);
+            this.bottomRightResizer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.bottomRightResizer_MouseUp);
             // 
             // btnStartOrRecord
             // 

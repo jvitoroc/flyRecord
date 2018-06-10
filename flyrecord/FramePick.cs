@@ -4,31 +4,29 @@ using System.Windows.Forms;
 
 namespace flyrecord
 {
-    public enum FlyRecordStatus
+    public enum FramePickStatus
     {
         Idle,
         Moving
     }
 
-    public partial class FlyRecord : Form
+    public partial class FramePick : Form
     {
         private GlobalKeyboardHook globalKeyboardHook;
-        private FlyRecordStatus FlyRecordStatus = FlyRecordStatus.Idle;
+        private FramePickStatus FramePickStatus = FramePickStatus.Idle;
         private Point startingMousePositionFormRelative;
 
-        public FlyRecord(Settings settings = null)
+        public FramePick(Settings settings = null)
         {
             InitializeComponent();
 
             if(settings != null)
             {
                 txtOutputPath.Text = settings.OutputPath;
-                txtDelimiterHeight.Text = settings.DelimiterHeight.ToString();
-                txtDelimiterWidth.Text = settings.DelimiterWidth.ToString();
                 cboxFollowCursor.Checked = settings.FollowCursor;
-                cboxRecordEntireScreen.Checked = settings.EntireScreen;
-                enabledDelimiter(!settings.EntireScreen);
-                cboxFPS.SelectedIndex = settings.FrameRateIndex;
+                cboxEntireScreen.Checked = settings.EntireScreen;
+                enableDelimiter(!settings.EntireScreen);
+                ddlFPS.SelectedIndex = settings.FrameRateIndex;
             }
             Recorder.OnRecordStart += OnRecordStartEventHandler;
             Recorder.OnRecordStopComplete += OnRecordStopCompleteEventHandler;
@@ -38,13 +36,13 @@ namespace flyrecord
         private void OnRecordStopCompleteEventHandler()
         {
             btnRecord.Enabled = true;
-            btnStopRecording.Enabled = false;
+            btnStop.Enabled = false;
         }
 
         private void OnPreparingEventHandler()
         {
             btnRecord.Enabled = false;
-            btnStopRecording.Enabled = true;
+            btnStop.Enabled = true;
         }
 
         private void OnRecordStartEventHandler()
@@ -88,25 +86,20 @@ namespace flyrecord
 
         private void cboxRecordEntireScreen_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.Instance.EntireScreen = cboxRecordEntireScreen.Checked;
-            enabledDelimiter(!cboxRecordEntireScreen.Checked);
+            Settings.Instance.EntireScreen = cboxEntireScreen.Checked;
+            enableDelimiter(!cboxEntireScreen.Checked);
         }
 
-        private void enabledDelimiter(bool enabled)
+        private void enableDelimiter(bool enabled)
         {
-            panelDelimiterSettings.Enabled = enabled;
+            cboxFollowCursor.Enabled = enabled;
             if (enabled)
                 Delimiter.Enable();
             else
                 Delimiter.Disable();
         }
 
-        private bool enabledDelimiter()
-        {
-            return panelDelimiterSettings.Enabled;
-        }
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void FramePick_FormClosing(object sender, FormClosingEventArgs e)
         {
             globalKeyboardHook?.Dispose();
             if (Recorder.Instance.Status == RecorderStatus.Recording)
@@ -124,26 +117,26 @@ namespace flyrecord
             Settings.Instance.FollowCursor = cboxFollowCursor.Checked;
         }
 
-        private void startButton_Click(object sender, EventArgs e)
+        private void stopButton_Click(object sender, EventArgs e)
         {
             if (Recorder.Instance.Status == RecorderStatus.Recording)
                 throw new InvalidOperationException();
             Recorder.Instance.Stop();
         }
 
-        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        private void panel_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                FlyRecordStatus = FlyRecordStatus.Moving;
+                FramePickStatus = FramePickStatus.Moving;
             }
             startingMousePositionFormRelative.X = e.X;
             startingMousePositionFormRelative.Y = e.Y;
         }
 
-        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        private void panel_MouseMove(object sender, MouseEventArgs e)
         {
-            if (FlyRecordStatus == FlyRecordStatus.Moving)
+            if (FramePickStatus == FramePickStatus.Moving)
             {
                 int newLocationX = Cursor.Position.X - startingMousePositionFormRelative.X;
                 int newLocationY = Cursor.Position.Y - startingMousePositionFormRelative.Y;
@@ -152,45 +145,35 @@ namespace flyrecord
             }
         }
 
-        private void panel1_MouseUp(object sender, MouseEventArgs e)
+        private void panel_MouseUp(object sender, MouseEventArgs e)
         {
-            FlyRecordStatus = FlyRecordStatus.Idle;
+            FramePickStatus = FramePickStatus.Idle;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void closeButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void minimizeButton_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void browseButton_Click(object sender, EventArgs e)
         {
-            DialogResult res = folderBrowserDialog1.ShowDialog();
+            DialogResult res = folderBrowserDialogOutputPath.ShowDialog();
             if (res == DialogResult.OK)
             {
-                txtOutputPath.Text = folderBrowserDialog1.SelectedPath;
-                Settings.Instance.OutputPath = folderBrowserDialog1.SelectedPath;
+                txtOutputPath.Text = folderBrowserDialogOutputPath.SelectedPath;
+                Settings.Instance.OutputPath = folderBrowserDialogOutputPath.SelectedPath;
             }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Settings.Instance.FrameRate = float.Parse(cboxFPS.Text);
-            Settings.Instance.FrameRateIndex = cboxFPS.SelectedIndex;
-        }
-
-        private void txtDelimiterHeight_TextChanged_1(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void txtDelimiterWidth_TextChanged(object sender, EventArgs e)
-        {
-
+            Settings.Instance.FrameRate = float.Parse(ddlFPS.Text);
+            Settings.Instance.FrameRateIndex = ddlFPS.SelectedIndex;
         }
     }
 }

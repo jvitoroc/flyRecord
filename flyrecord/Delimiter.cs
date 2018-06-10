@@ -53,6 +53,8 @@ namespace flyrecord
             this.Size = new Size(300, 300);
             pnlInner.Location = new Point(5, 35);
             pnlInner.Size = new Size(290, 260);
+            this.bottomRightResizer.BackColor = Color.DarkSlateGray;
+            this.topLeftResizer.BackColor = Color.DarkSlateGray;
 
             changeButtonState(Recorder.Instance.Status);
 
@@ -134,9 +136,9 @@ namespace flyrecord
             locked = false;
         }
 
-        public Point getInnerDelimiterUpperLeftLocation()
+        public Point getInnerDelimiterUpperLeftLocation()   
         {
-            return new Point(Location.X + 5, Location.Y + 35);
+            return new Point(0, 0);
         }
 
         public Size getInnerDelimiterSize()
@@ -144,7 +146,7 @@ namespace flyrecord
             return pnlInner.Size;
         }
 
-        private void button1_MouseDown(object sender, MouseEventArgs e)
+        private void bottomRightResizer_MouseDown(object sender, MouseEventArgs e)
         {
             if (locked)
                 return;
@@ -161,7 +163,7 @@ namespace flyrecord
             startingMousePositionFormRelative.Y = 5 - e.Y;
         }
 
-        private void button1_MouseMove(object sender, MouseEventArgs e)
+        private void bottomRightResizer_MouseMove(object sender, MouseEventArgs e)
         {
             if (locked)
                 return;
@@ -187,7 +189,7 @@ namespace flyrecord
             }
         }
 
-        private void button1_MouseUp(object sender, MouseEventArgs e)
+        private void bottomRightResizer_MouseUp(object sender, MouseEventArgs e)
         {
             DelimiterStatus = DelimiterStatus.Idle;
         }
@@ -289,14 +291,19 @@ namespace flyrecord
             DelimiterStatus = DelimiterStatus.Idle;
         }
 
-        private void Delimiter_Load(object sender, EventArgs e)
+        private void btnStartOrRecord_Click(object sender, EventArgs e)
+        {
+            ButtonFunction();
+        }
+
+        private void pnlInner_Paint(object sender, PaintEventArgs e)
         {
 
         }
 
-        private void btnStartOrRecord_Click(object sender, EventArgs e)
+        private void Delimiter_Load(object sender, EventArgs e)
         {
-            ButtonFunction();
+
         }
     }
 }

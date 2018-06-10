@@ -81,11 +81,11 @@
     <Compile Include="Delimiter.Designer.cs">
       <DependentUpon>Delimiter.cs</DependentUpon>
     </Compile>
-    <Compile Include="FlyRecord.cs">
+    <Compile Include="FramePick.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FlyRecord.Designer.cs">
-      <DependentUpon>FlyRecord.cs</DependentUpon>
+    <Compile Include="FramePick.Designer.cs">
+      <DependentUpon>FramePick.cs</DependentUpon>
     </Compile>
     <Compile Include="Third\GlobalHookKeyboard.cs" />
     <Compile Include="Program.cs" />
@@ -98,8 +98,8 @@
     <EmbeddedResource Include="Delimiter.resx">
       <DependentUpon>Delimiter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FlyRecord.resx">
-      <DependentUpon>FlyRecord.cs</DependentUpon>
+    <EmbeddedResource Include="FramePick.resx">
+      <DependentUpon>FramePick.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -109,6 +109,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -123,6 +124,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\resources\1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\resources\2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\resources\numbers.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\resources\number1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\resources\number2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\resources\number3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Accord.3.8.0\build\Accord.targets" Condition="Exists('..\packages\Accord.3.8.0\build\Accord.targets')" />

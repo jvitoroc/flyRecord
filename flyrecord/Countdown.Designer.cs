@@ -28,41 +28,44 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtCountdown = new System.Windows.Forms.Label();
+            this.picCountdown = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.picCountdown)).BeginInit();
             this.SuspendLayout();
             // 
-            // txtCountdown
+            // picCountdown
             // 
-            this.txtCountdown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.picCountdown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCountdown.AutoSize = true;
-            this.txtCountdown.Font = new System.Drawing.Font("Arial", 70F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCountdown.Location = new System.Drawing.Point(76, 73);
-            this.txtCountdown.Name = "txtCountdown";
-            this.txtCountdown.Size = new System.Drawing.Size(97, 104);
-            this.txtCountdown.TabIndex = 0;
-            this.txtCountdown.Text = "3";
+            this.picCountdown.Image = global::flyrecord.Properties.Resources.number3;
+            this.picCountdown.Location = new System.Drawing.Point(93, 93);
+            this.picCountdown.Name = "picCountdown";
+            this.picCountdown.Size = new System.Drawing.Size(64, 64);
+            this.picCountdown.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.picCountdown.TabIndex = 1;
+            this.picCountdown.TabStop = false;
+            this.picCountdown.Click += new System.EventHandler(this.picCountdown_Click);
             // 
             // Countdown
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Silver;
             this.ClientSize = new System.Drawing.Size(250, 250);
-            this.Controls.Add(this.txtCountdown);
+            this.Controls.Add(this.picCountdown);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Countdown";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Countdown";
-            this.TransparencyKey = System.Drawing.SystemColors.Control;
+            this.TransparencyKey = System.Drawing.Color.Silver;
             this.Load += new System.EventHandler(this.Countdown_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.picCountdown)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label txtCountdown;
+        private System.Windows.Forms.PictureBox picCountdown;
     }
 }

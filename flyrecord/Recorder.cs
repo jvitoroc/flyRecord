@@ -37,7 +37,7 @@ namespace flyrecord
     public sealed class Recorder
     {
 
-        private SaveFileDialog saveFileDialog;
+        private SaveFileDialog saveFileDialog = new SaveFileDialog();
 
         private static Size blockRegionSize;
         private static Point upperLeftSource;
@@ -134,7 +134,6 @@ namespace flyrecord
 
             int meanDelay = (int)stopWatch.ElapsedMilliseconds / totalFrames;
 
-            saveFileDialog = new SaveFileDialog();
             saveFileDialog.RestoreDirectory = true;
             saveFileDialog.InitialDirectory = Path.GetFullPath(Settings.Instance.OutputPath);
             saveFileDialog.ShowDialog();
