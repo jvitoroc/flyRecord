@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace flyrecord
@@ -87,7 +88,7 @@ namespace flyrecord
 
         private void picCountdown_Click(object sender, EventArgs e)
         {
-
+           
         }
     }
 }

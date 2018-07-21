@@ -37,7 +37,6 @@
             this.picCountdown.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.picCountdown.Image = global::flyrecord.Properties.Resources.number3;
             this.picCountdown.Location = new System.Drawing.Point(93, 93);
             this.picCountdown.Name = "picCountdown";
             this.picCountdown.Size = new System.Drawing.Size(64, 64);

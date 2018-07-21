@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -31,6 +32,12 @@ namespace flyrecord
             Recorder.OnRecordStart += OnRecordStartEventHandler;
             Recorder.OnRecordStopComplete += OnRecordStopCompleteEventHandler;
             Recorder.OnPreparing += OnPreparingEventHandler;
+            Properties.Settings.Default.SettingChanging += OnSettingsChangeEventHandler;
+        }
+
+        private void OnSettingsChangeEventHandler(object sender, SettingChangingEventArgs e)
+        {
+            
         }
 
         private void OnRecordStopCompleteEventHandler()
@@ -120,8 +127,7 @@ namespace flyrecord
         private void stopButton_Click(object sender, EventArgs e)
         {
             if (Recorder.Instance.Status == RecorderStatus.Recording)
-                throw new InvalidOperationException();
-            Recorder.Instance.Stop();
+                Recorder.Instance.Stop();
         }
 
         private void panel_MouseDown(object sender, MouseEventArgs e)

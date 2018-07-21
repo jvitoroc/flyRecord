@@ -136,6 +136,9 @@ namespace flyrecord
 
             saveFileDialog.RestoreDirectory = true;
             saveFileDialog.InitialDirectory = Path.GetFullPath(Settings.Instance.OutputPath);
+            saveFileDialog.DefaultExt = "gif";
+            saveFileDialog.AddExtension = true;
+            saveFileDialog.Filter = "GIF File(*.gif;*.GIF)|";
             saveFileDialog.ShowDialog();
 
             GIF gif = new GIF(meanDelay, Path.Combine(Settings.Instance.OutputPath, saveFileDialog.FileName));
@@ -171,10 +174,9 @@ namespace flyrecord
 
             //If EntireScreen option is set to true, get the user screen size
             if (Settings.Instance.EntireScreen)
-                blockRegionSize = new Size(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                blockRegionSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             else
             {
-
                 Delimiter delimiter = Delimiter.Instance;
                 delimiter.Lock();
                 delimiter.TopMost = true;

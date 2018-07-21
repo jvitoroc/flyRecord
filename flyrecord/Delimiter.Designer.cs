@@ -43,9 +43,7 @@
             this.pnlInner.Location = new System.Drawing.Point(5, 35);
             this.pnlInner.Name = "pnlInner";
             this.pnlInner.Size = new System.Drawing.Size(290, 260);
-            this.pnlInner.TabIndex = 0;
-            this.pnlInner.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlInner_Paint);
-            // 
+            this.pnlInner.TabIndex = 0;            // 
             // topLeftResizer
             // 
             this.topLeftResizer.BackColor = System.Drawing.Color.Black;
@@ -90,7 +88,7 @@
             this.btnStartOrRecord.FlatAppearance.BorderColor = System.Drawing.Color.Teal;
             this.btnStartOrRecord.FlatAppearance.BorderSize = 0;
             this.btnStartOrRecord.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStartOrRecord.Font = new System.Drawing.Font("Roboto", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStartOrRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStartOrRecord.ForeColor = System.Drawing.SystemColors.Control;
             this.btnStartOrRecord.Location = new System.Drawing.Point(115, 5);
             this.btnStartOrRecord.Margin = new System.Windows.Forms.Padding(0);
@@ -118,7 +116,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Delimiter";
             this.TransparencyKey = System.Drawing.Color.DarkGray;
-            this.Load += new System.EventHandler(this.Delimiter_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Delimiter_FormClosing);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Delimiter_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Delimiter_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Delimiter_MouseUp);

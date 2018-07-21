@@ -138,7 +138,7 @@ namespace flyrecord
 
         public Point getInnerDelimiterUpperLeftLocation()   
         {
-            return new Point(0, 0);
+            return new Point(pnlInner.Location.X + this.Location.X, pnlInner.Location.Y + this.Location.Y);
         }
 
         public Size getInnerDelimiterSize()
@@ -296,14 +296,10 @@ namespace flyrecord
             ButtonFunction();
         }
 
-        private void pnlInner_Paint(object sender, PaintEventArgs e)
+        private void Delimiter_FormClosing(object sender, FormClosingEventArgs e)
         {
-
-        }
-
-        private void Delimiter_Load(object sender, EventArgs e)
-        {
-
+            Settings.Instance.EntireScreen = false;
+            Program.framePick.
         }
     }
 }
