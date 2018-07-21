@@ -43,7 +43,8 @@
             this.pnlInner.Location = new System.Drawing.Point(5, 35);
             this.pnlInner.Name = "pnlInner";
             this.pnlInner.Size = new System.Drawing.Size(290, 260);
-            this.pnlInner.TabIndex = 0;            // 
+            this.pnlInner.TabIndex = 0;
+            // 
             // topLeftResizer
             // 
             this.topLeftResizer.BackColor = System.Drawing.Color.Black;
@@ -117,6 +118,7 @@
             this.Text = "Delimiter";
             this.TransparencyKey = System.Drawing.Color.DarkGray;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Delimiter_FormClosing);
+            this.Load += new System.EventHandler(this.Delimiter_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Delimiter_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Delimiter_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Delimiter_MouseUp);

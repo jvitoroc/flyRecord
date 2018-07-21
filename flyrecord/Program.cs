@@ -24,8 +24,7 @@ namespace flyrecord
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Settings.Instance.Sync();
-            framePick = new FramePick(Settings.Instance);
+            framePick = new FramePick();
 
             Application.Run(framePick);
         }

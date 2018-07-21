@@ -17,7 +17,7 @@ namespace flyrecord
         {
             InitializeComponent();
             this.TopMost = true;
-            if (Settings.Instance.EntireScreen)
+            if (Properties.Settings.Default.entireScreen)
             {
                 this.Location = new System.Drawing.Point(0, 0);
                 this.Size = new System.Drawing.Size(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);

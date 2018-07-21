@@ -298,8 +298,12 @@ namespace flyrecord
 
         private void Delimiter_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.Instance.EntireScreen = false;
-            Program.framePick.
+            Properties.Settings.Default.entireScreen = false;
+        }
+
+        private void Delimiter_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

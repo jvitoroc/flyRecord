@@ -49,7 +49,7 @@ namespace flyrecord
 
         private RecorderStatus RecorderStatus = RecorderStatus.Stopped;
 
-        private static Thread streamWriterThread;
+        private static Thread streamWriterThread = new Thread(streamWriter);
 
         private static Bitmap bitmapBuffer;
         private static Graphics graphicsBuffer;
@@ -114,6 +114,10 @@ namespace flyrecord
         }
 
         public void Stop() {
+            recording = false;
+            if(streamWriterThread.ThreadState == System.Threading.ThreadState.Running)
+                streamWriterThread.Join();
+
             if (RecorderStatus == RecorderStatus.Preparing)
             {
                 if (countdown != null)
@@ -124,31 +128,36 @@ namespace flyrecord
                 }
                 Dispose();
                 OnRecordStopComplete?.Invoke();
+                RecorderStatus = RecorderStatus.Stopped;
                 return;
             }
             RecorderStatus = RecorderStatus.Stopped;
-            recording = false;
-
-            //Wait for the recording thread to end
-            streamWriterThread.Join();
-
-            int meanDelay = (int)stopWatch.ElapsedMilliseconds / totalFrames;
+            OnRecordStopComplete?.Invoke();
+            int meanDelay;
+            try
+            {
+                meanDelay = (int)stopWatch.ElapsedMilliseconds / totalFrames;
+            }
+            catch (System.DivideByZeroException)
+            {
+                // silently...
+                Dispose();
+                return;
+            }
 
             saveFileDialog.RestoreDirectory = true;
-            saveFileDialog.InitialDirectory = Path.GetFullPath(Settings.Instance.OutputPath);
+            saveFileDialog.InitialDirectory = Path.GetFullPath(Properties.Settings.Default.outputPath);
             saveFileDialog.DefaultExt = "gif";
             saveFileDialog.AddExtension = true;
             saveFileDialog.Filter = "GIF File(*.gif;*.GIF)|";
-            saveFileDialog.ShowDialog();
-
-            GIF gif = new GIF(meanDelay, Path.Combine(Settings.Instance.OutputPath, saveFileDialog.FileName));
-            gif.Save(frames);
-            gif = null;
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                GIF gif = new GIF(meanDelay, Path.Combine(Properties.Settings.Default.outputPath, saveFileDialog.FileName));
+                gif.Save(frames);
+                gif = null;
+            }
 
             Dispose();
-
-            OnRecordStopComplete?.Invoke();
-
         }
 
         private void Dispose(){
@@ -158,12 +167,15 @@ namespace flyrecord
                 frames[i] = null;
             }
             frames = null;
+
             if (bitmapBuffer != null)
                 bitmapBuffer.Dispose();
+
             stopWatch = null;
+
             if (graphicsBuffer != null)
                 graphicsBuffer.Dispose();
-            streamWriterThread = null;
+
             totalFrames = 0;
         }
 
@@ -173,7 +185,7 @@ namespace flyrecord
             Size blockRegionSize;
 
             //If EntireScreen option is set to true, get the user screen size
-            if (Settings.Instance.EntireScreen)
+            if (Properties.Settings.Default.entireScreen)
                 blockRegionSize = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             else
             {
@@ -188,7 +200,6 @@ namespace flyrecord
             delay = (int)(1000.0 / frameRate);
             
             //Initialize buffers
-            streamWriterThread = new Thread(streamWriter);
             stopWatch = new Stopwatch();
             frames = new List<Frame>();
 
@@ -198,7 +209,7 @@ namespace flyrecord
 
         public void Start()
         {
-            Start(60);  
+            Start(Properties.Settings.Default.frameRate);  
         }
 
         public void OnTimeoutEventHandler()
